@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "KPsBuCB4ha41HPMntPRTIwgBa0gV35wbiEE64l7lV+Y=",
+  "Source": "diseaseAPI-DotNet6",
+  "BasePath": "_content/diseaseAPI-DotNet6",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
