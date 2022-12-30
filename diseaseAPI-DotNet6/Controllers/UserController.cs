@@ -36,6 +36,28 @@ namespace diseaseAPI_DotNet6.Controllers
             return Ok(User);
         }
 
+        [HttpGet("{email}/{password}")]
+        public async Task<ActionResult<List<User>>> GetByEmail(string email, string password)
+        {
+            var Users = await _context.Users.ToListAsync();
+            int i = 0;
+            Users.ForEach(user =>
+            {
+                if (user.email == email && user.password == password)
+                {
+                    i = user.Id;
+                }
+            });
+            var User = await _context.Users.FindAsync(i);
+            if (User == null)
+            {
+                return NotFound("User not found");
+            }
+
+
+            return Ok(User);
+        }
+
         // POST api/<UserController>
         [HttpPost]
         public async Task<ActionResult<List<User>>> AddUser(User User)

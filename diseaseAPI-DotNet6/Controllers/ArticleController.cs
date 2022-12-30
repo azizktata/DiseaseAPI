@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Reflection;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,31 +33,58 @@ namespace diseaseAPI_DotNet6.Controllers
         {
             List<Article> Articles = await _context.Articles.ToListAsync();
             List<Article> Selected = new List<Article>();
+            if(diseaseId<=0)
+            {
+                return BadRequest();
+            }
             foreach(Article article in Articles)
             {
                 if (article.diseaseId == diseaseId)
                     Selected.Add(article);
                     
             }
+
             if (Selected.Count == 0)
             {
-                return BadRequest("Article not found");
+                return NotFound("Article not found");
             }
+            
             return Ok(Selected);
         }
 
         // POST api/<ArticleController>
         [HttpPost]
-        public async Task<ActionResult<List<Article>>> AddArticle(Article Article)
+        public async Task<ActionResult<List<Article>>> AddArticle(AddArticleDto request)
         {
+            
+            if(request.diseaseId <=0)
+            {
+                return BadRequest("invalid request");
+            }
+            
+            var Article = new Article
+            {
+                title = request.title,
+                description = request.description,
+                url = request.url,
+                diseaseId = request.diseaseId
+
+
+            };
+            
+
             _context.Articles.Add(Article);
             _context.SaveChanges();
             var disease =  await _context.Diseases.FindAsync(Article.diseaseId);
             if (disease == null)
-                return BadRequest("disease not found");
+                return NotFound("disease not found");
+
+
+
             //var articles = new List<Article>();
             //articles.Add(Article);
             disease.articles.Add(Article);
+
             
 
             //articles.ToList<Article>().ForEach(tchr => _context.Entry(tchr).State = EntityState.Added);
