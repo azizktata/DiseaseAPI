@@ -1,6 +1,8 @@
-﻿using diseaseAPI_DotNet6.Models;
+﻿using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using DataAcess;
+using Domain.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,44 +13,54 @@ namespace diseaseAPI_DotNet6.Controllers
     public class UserController : ControllerBase
     {
 
-        private readonly diseaseDbContext _context;
+        private readonly IUnitOfWork unitOfWork;
 
-        public UserController (diseaseDbContext context)
+        public UserController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
         }
         // GET: api/<UserController>
         [HttpGet]
-        public async Task<ActionResult<List<User>>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<List<User>> GetAll()
         {
-            return Ok(await _context.Users.ToListAsync());
+            var users = unitOfWork.User.GetAll();
+            return Ok(users);
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<User>>> Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<List<User>> GetUserById(int id)
         {
-            var User = await _context.Users.FindAsync(id);
+            var User =unitOfWork.User.GetById(id);
+            if(id<=0)
+            {
+                return BadRequest("invalid input");
+            }
             if (User == null)
             {
-                return BadRequest("User not found");
+                return NotFound("User not found");
             }
             return Ok(User);
         }
 
         [HttpGet("{email}/{password}")]
-        public async Task<ActionResult<List<User>>> GetByEmail(string email, string password)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<List<User>> GetByEmail(string email, string password)
         {
-            var Users = await _context.Users.ToListAsync();
+            var Users = unitOfWork.User.GetAll();
             int i = 0;
-            Users.ForEach(user =>
+            foreach(User user in Users)
             {
                 if (user.email == email && user.password == password)
                 {
                     i = user.Id;
                 }
-            });
-            var User = await _context.Users.FindAsync(i);
+            };
+            var User = unitOfWork.User.GetById(i);
             if (User == null)
             {
                 return NotFound("User not found");
@@ -60,18 +72,21 @@ namespace diseaseAPI_DotNet6.Controllers
 
         // POST api/<UserController>
         [HttpPost]
-        public async Task<ActionResult<List<User>>> AddUser(User User)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<List<User>> AddUser(User User)
         {
-            _context.Users.Add(User);
-            await _context.SaveChangesAsync();  
+            unitOfWork.User.Add(User);
+            unitOfWork.Save();
             return Ok(User);   
         }
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<User>>> UpdateUser(int id, User User)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<List<User>> UpdateUser(int id, User User)
         {
-            var Usernw = await _context.Users.FindAsync(id);
+            var Usernw = unitOfWork.User.GetById(id);
             if (Usernw == null)
                 return BadRequest("User not found");
             Usernw.firstName = User.firstName;
@@ -79,17 +94,22 @@ namespace diseaseAPI_DotNet6.Controllers
             Usernw.email = User.email;
             Usernw.location= User.location;
             Usernw.password = User.password;
-            _context.Users.Update(Usernw);
-            await _context.SaveChangesAsync();
+            unitOfWork.User.Update(Usernw);
+            unitOfWork.Save();
             return Ok(Usernw);
         }
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<User>>> DeleteUser(int id)
         {
-            _context.Users.Remove(_context.Users.Find(id));   
-            await _context.SaveChangesAsync();
+            var user = unitOfWork.User.GetById(id);
+            if (user == null)
+                return NotFound("No user found");
+            unitOfWork.User.Remove(user);
+            unitOfWork.Save();
             return Ok();
         }
     }

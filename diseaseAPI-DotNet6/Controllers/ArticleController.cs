@@ -1,8 +1,10 @@
-﻿using diseaseAPI_DotNet6.Models;
+﻿using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Reflection;
+using DataAcess;
+using Domain.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,25 +15,29 @@ namespace diseaseAPI_DotNet6.Controllers
     public class ArticleController : ControllerBase
     {
 
-        private readonly diseaseDbContext _context;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ArticleController (diseaseDbContext context)
+        public ArticleController (IUnitOfWork unitOfWork)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
         }
         // GET: api/<ArticleController>
         [HttpGet]
-        public async Task<ActionResult<List<Article>>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<List<Article>> Get()
         {
-            return Ok(await _context.Articles.ToListAsync());
+            return Ok(unitOfWork.Article.GetAll());
         }
 
         
         // GET api/<ArticleController>/diseaseName
         [HttpGet("{diseaseId:int}")]
-        public async Task<ActionResult<List<Article>>> GetByDiseaseName(int diseaseId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<List<Article>> GetByDiseaseId(int diseaseId)
         {
-            List<Article> Articles = await _context.Articles.ToListAsync();
+            var Articles = unitOfWork.Article.GetAll();
             List<Article> Selected = new List<Article>();
             if(diseaseId<=0)
             {
@@ -44,17 +50,19 @@ namespace diseaseAPI_DotNet6.Controllers
                     
             }
 
-            if (Selected.Count == 0)
+            /*if (Selected.Count == 0)
             {
                 return NotFound("Article not found");
-            }
+            }*/
             
             return Ok(Selected);
         }
 
         // POST api/<ArticleController>
         [HttpPost]
-        public async Task<ActionResult<List<Article>>> AddArticle(AddArticleDto request)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<List<Article>> AddArticle(AddArticleDto request)
         {
             
             if(request.diseaseId <=0)
@@ -73,38 +81,16 @@ namespace diseaseAPI_DotNet6.Controllers
             };
             
 
-            _context.Articles.Add(Article);
-            _context.SaveChanges();
-            var disease =  await _context.Diseases.FindAsync(Article.diseaseId);
+            unitOfWork.Article.Add(Article);
+            unitOfWork.Save();
+            var disease =  unitOfWork.Disease.GetById(Article.Id);
             if (disease == null)
                 return NotFound("disease not found");
 
 
-
-            //var articles = new List<Article>();
-            //articles.Add(Article);
             disease.articles.Add(Article);
-
-            
-
-            //articles.ToList<Article>().ForEach(tchr => _context.Entry(tchr).State = EntityState.Added);
-            //_context.Entry(disease.articles).State = EntityState.Added;
-            //var entry = _context.Entry(disease);
-            
-
-            //disease.articles.ForEach(item => _context.Entry(item).State = EntityState.Modified);
-            foreach(Article item in disease.articles)
-            {
-              
-                _context.Entry(item).State = EntityState.Modified;
-             
-
-            }
-            _context.Diseases.Entry(disease).State = EntityState.Added;
-            _context.Diseases.Update(disease);
-            _context.SaveChanges();
-            
-            await _context.SaveChangesAsync();  
+            unitOfWork.Disease.Update(disease);
+            unitOfWork.Save();
             return Ok(disease);   
         }
 
@@ -129,8 +115,13 @@ namespace diseaseAPI_DotNet6.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<Article>>> DeleteArticle(int id)
         {
-            _context.Articles.Remove(_context.Articles.Find(id));   
-            await _context.SaveChangesAsync();
+            if (id <= 0)
+                return BadRequest("invalid input");
+            var article = unitOfWork.Article.GetById(id);
+            if (article == null)
+                return NotFound();
+            unitOfWork.Article.Remove(article);
+            unitOfWork.Save();
             return Ok();
         }
     }

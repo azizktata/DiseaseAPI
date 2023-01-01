@@ -4,6 +4,7 @@ namespace diseaseAPI_DotNet6
 {
     public class AddArticleDto
     {
+        
         public string title { get; set; }
         public string description { get; set; }
 

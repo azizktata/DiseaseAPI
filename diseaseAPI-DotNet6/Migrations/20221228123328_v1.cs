@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace diseaseAPIDotNet6.Migrations
+namespace diseaseAPI_DotNet6.Migrations
 {
     /// <inheritdoc />
     public partial class v1 : Migration

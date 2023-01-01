@@ -596,3 +596,7 @@ C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\obj\Debug\net6.0\refint\d
 C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\obj\Debug\net6.0\diseaseAPI-DotNet6.pdb
 C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\obj\Debug\net6.0\diseaseAPI-DotNet6.genruntimeconfig.cache
 C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\obj\Debug\net6.0\ref\diseaseAPI-DotNet6.dll
+C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\bin\Debug\net6.0\DataAcess.dll
+C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\bin\Debug\net6.0\Domain.dll
+C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\bin\Debug\net6.0\DataAcess.pdb
+C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\bin\Debug\net6.0\Domain.pdb

@@ -3924,6 +3924,31 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
+      },
+      "DataAcess/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Domain": "1.0.0",
+          "EntityFramework": "6.4.4",
+          "Microsoft.EntityFrameworkCore.SqlServer": "7.0.1"
+        },
+        "compile": {
+          "bin/placeholder/DataAcess.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DataAcess.dll": {}
+        }
+      },
+      "Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Domain.dll": {}
+        }
       }
     }
   },
@@ -11121,12 +11146,23 @@
         "system.xml.xdocument.4.3.0.nupkg.sha512",
         "system.xml.xdocument.nuspec"
       ]
+    },
+    "DataAcess/1.0.0": {
+      "type": "project",
+      "path": "../DataAcess/DataAcess.csproj",
+      "msbuildProject": "../DataAcess/DataAcess.csproj"
+    },
+    "Domain/1.0.0": {
+      "type": "project",
+      "path": "../Domain/Domain.csproj",
+      "msbuildProject": "../Domain/Domain.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "DataAcess >= 1.0.0",
+      "Domain >= 1.0.0",
       "EntityFramework >= 6.4.4",
-      "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.1",
       "Microsoft.EntityFrameworkCore.SqlServer.Design >= 1.1.6",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.1",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 6.0.11",
@@ -11163,7 +11199,14 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\HP\\source\\repos\\DiseaseAPI\\DataAcess\\DataAcess.csproj": {
+              "projectPath": "C:\\Users\\HP\\source\\repos\\DiseaseAPI\\DataAcess\\DataAcess.csproj"
+            },
+            "C:\\Users\\HP\\source\\repos\\DiseaseAPI\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\HP\\source\\repos\\DiseaseAPI\\Domain\\Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -11179,10 +11222,6 @@
           "EntityFramework": {
             "target": "Package",
             "version": "[6.4.4, )"
-          },
-          "Microsoft.EntityFrameworkCore.SqlServer": {
-            "target": "Package",
-            "version": "[7.0.1, )"
           },
           "Microsoft.EntityFrameworkCore.SqlServer.Design": {
             "target": "Package",

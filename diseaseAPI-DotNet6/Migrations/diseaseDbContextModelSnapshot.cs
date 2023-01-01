@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
 using diseaseAPI_DotNet6;
 
 #nullable disable
 
-namespace diseaseAPIDotNet6.Migrations
+namespace diseaseAPI_DotNet6.Migrations
 {
-    [DbContext(typeof(diseaseDbContext))]
+    [DbContext(typeof(DataAcess.diseaseDbContext))]
     partial class diseaseDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

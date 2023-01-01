@@ -8,9 +8,9 @@ using diseaseAPI_DotNet6;
 
 #nullable disable
 
-namespace diseaseAPIDotNet6.Migrations
+namespace diseaseAPI_DotNet6.Migrations
 {
-    [DbContext(typeof(diseaseDbContext))]
+    [DbContext(typeof(DataAcess.diseaseDbContext))]
     [Migration("20221228123328_v1")]
     partial class v1
     {
