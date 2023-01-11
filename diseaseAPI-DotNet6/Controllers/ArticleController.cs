@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using DataAcess;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -59,6 +60,7 @@ namespace diseaseAPI_DotNet6.Controllers
         }
 
         // POST api/<ArticleController>
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -83,35 +85,29 @@ namespace diseaseAPI_DotNet6.Controllers
 
             unitOfWork.Article.Add(Article);
             unitOfWork.Save();
-            var disease =  unitOfWork.Disease.GetById(Article.Id);
-            if (disease == null)
-                return NotFound("disease not found");
-
-
-            disease.articles.Add(Article);
-            unitOfWork.Disease.Update(disease);
-            unitOfWork.Save();
-            return Ok(disease);   
+           
+            return Ok(Article);   
         }
 
         // PUT api/<ArticleController>/5
-       /* [HttpPut("{id}")]
-        public async Task<ActionResult<List<Article>>> UpdateArticle(int id, Article Article)
-        {
-            var Articlenw = await _context.Articles.FindAsync(id);
-            if (Articlenw == null)
-                return BadRequest("Article not found");
-            Articlenw.firstName = Article.firstName;
-            Articlenw.lastName = Article.lastName;
-            Articlenw.email = Article.email;
-            Articlenw.location= Article.location;
-            Articlenw.password = Article.password;
-            _context.Articles.Update(Articlenw);
-            await _context.SaveChangesAsync();
-            return Ok(Articlenw);
-        }
-       */
+        /* [HttpPut("{id}")]
+         public async Task<ActionResult<List<Article>>> UpdateArticle(int id, Article Article)
+         {
+             var Articlenw = await _context.Articles.FindAsync(id);
+             if (Articlenw == null)
+                 return BadRequest("Article not found");
+             Articlenw.firstName = Article.firstName;
+             Articlenw.lastName = Article.lastName;
+             Articlenw.email = Article.email;
+             Articlenw.location= Article.location;
+             Articlenw.password = Article.password;
+             _context.Articles.Update(Articlenw);
+             await _context.SaveChangesAsync();
+             return Ok(Articlenw);
+         }
+        */
         // DELETE api/<ArticleController>/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<Article>>> DeleteArticle(int id)
         {

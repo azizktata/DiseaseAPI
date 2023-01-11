@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using DataAcess;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -47,6 +48,7 @@ namespace diseaseAPI_DotNet6.Controllers
         }
 
         // POST api/<Doctor_infoController>
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<List<Doctor_info>>> AddDoctor_info(Doctor_info Doctor_info)
         {
@@ -82,23 +84,24 @@ namespace diseaseAPI_DotNet6.Controllers
         }
 
         // PUT api/<Doctor_infoController>/5
-       /* [HttpPut("{id}")]
-        public async Task<ActionResult<List<Doctor_info>>> UpdateDoctor_info(int id, Doctor_info Doctor_info)
-        {
-            var Doctor_infonw = await _context.Doctor_infos.FindAsync(id);
-            if (Doctor_infonw == null)
-                return BadRequest("Doctor_info not found");
-            Doctor_infonw.firstName = Doctor_info.firstName;
-            Doctor_infonw.lastName = Doctor_info.lastName;
-            Doctor_infonw.email = Doctor_info.email;
-            Doctor_infonw.location= Doctor_info.location;
-            Doctor_infonw.password = Doctor_info.password;
-            _context.Doctor_infos.Update(Doctor_infonw);
-            await _context.SaveChangesAsync();
-            return Ok(Doctor_infonw);
-        }
-       */
+        /* [HttpPut("{id}")]
+         public async Task<ActionResult<List<Doctor_info>>> UpdateDoctor_info(int id, Doctor_info Doctor_info)
+         {
+             var Doctor_infonw = await _context.Doctor_infos.FindAsync(id);
+             if (Doctor_infonw == null)
+                 return BadRequest("Doctor_info not found");
+             Doctor_infonw.firstName = Doctor_info.firstName;
+             Doctor_infonw.lastName = Doctor_info.lastName;
+             Doctor_infonw.email = Doctor_info.email;
+             Doctor_infonw.location= Doctor_info.location;
+             Doctor_infonw.password = Doctor_info.password;
+             _context.Doctor_infos.Update(Doctor_infonw);
+             await _context.SaveChangesAsync();
+             return Ok(Doctor_infonw);
+         }
+        */
         // DELETE api/<Doctor_infoController>/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<Doctor_info>>> DeleteDoctor_info(int id)
         {

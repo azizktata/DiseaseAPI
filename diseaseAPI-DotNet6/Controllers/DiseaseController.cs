@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataAcess;
 
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace diseaseAPI_DotNet6.Controllers
@@ -19,56 +22,40 @@ namespace diseaseAPI_DotNet6.Controllers
             _context = context;
         }
         // GET: api/<DiseaseController>
+        
         [HttpGet()]
-        public async Task<ActionResult<List<Disease>>> Get()
+        public  ActionResult<List<Disease>> Get()
         {
-            return Ok(await _context.Diseases.ToListAsync());
+            return Ok( _context.Diseases.Include("articles").Include(d => d.doctors).ToList());
            // await _db.Authors.Include(b => b.Books)
                   //      .FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        // GET api/<DiseaseController>/5
-        [HttpGet("{id}/withArticles")]
-        public async Task<ActionResult<List<Disease>>> GetWithArticles(int id)
-        {
-            /* var Disease = await _context.Diseases.FindAsync(id);
-             if (Disease == null)
-             {
-                 return BadRequest("Disease not found");
-             }
-             return Ok(Disease);*/
-            return Ok(await _context.Diseases.Include(d 
-                => d.articles).FirstOrDefaultAsync(i => i.Id == id));
-        }
-        [HttpGet("{id}/withDoctors")]
-        public async Task<ActionResult<List<Disease>>> GetWithDoctors(int id)
-        {
-            /* var Disease = await _context.Diseases.FindAsync(id);
-             if (Disease == null)
-             {
-                 return BadRequest("Disease not found");
-             }
-             return Ok(Disease);*/
-            return Ok(await _context.Diseases.Include(d
-                => d.doctors).FirstOrDefaultAsync(i => i.Id == id));
-        }
-
+        
         // GET api/<DiseaseController>/diseaseName
         [HttpGet("{diseaseName:alpha}")]
         public async Task<ActionResult<List<Disease>>> GetByName(string diseaseName)
         {
-            List<Disease> Diseases = await _context.Diseases.ToListAsync();
-            foreach(Disease Disease in Diseases)
+            //List<Disease> Diseases = await _context.Diseases.ToListAsync();
+            var disease = _context.Diseases.Where(d => d.diseaseName== diseaseName).FirstOrDefault();
+
+            if (disease == null)
+                return NotFound();
+
+            return Ok(_context.Diseases.Where(d => d.diseaseName == diseaseName).Include("articles").Include(d => d.doctors).ToList());
+
+            /*foreach(Disease Disease in Diseases)
             {
                 if (Disease.diseaseName == diseaseName)
+
                     return BadRequest(Disease);
 
 
             }
             
-            return BadRequest("Disease not found");
-            
-            
+            return BadRequest("Disease not found");*/
+
+
         }
 
         // POST api/<DiseaseController>
@@ -81,7 +68,7 @@ namespace diseaseAPI_DotNet6.Controllers
             };
             _context.Diseases.Add(disease);
             await _context.SaveChangesAsync();  
-            return Ok(disease.Id);   
+            return Ok(disease);   
         }
 
 

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "kiG/ySEN+GQ7Mhl+PFnnbQ4MFqxyXrcUdYOy3WHdX3HuHGeYDKTfbfQh4nJdYAGBkh1otcP5RYDsmcqbQg3Hxg==",
+  "dgSpecHash": "0s/Ph6SpoopwLFG/7oToyxPPYmjqM6XhKJ4tfHfZhs9PGHOFXAZt8c+LabqOZBlz2P4e3AZy7lrb2l/67tj3Sw==",
   "success": true,
   "projectFilePath": "C:\\Users\\HP\\source\\repos\\DiseaseAPI\\diseaseAPI-DotNet6\\diseaseAPI-DotNet6.csproj",
   "expectedPackageFiles": [
@@ -11,6 +11,7 @@
     "C:\\Users\\HP\\.nuget\\packages\\messagepack\\2.1.152\\messagepack.2.1.152.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\messagepack.annotations\\2.1.152\\messagepack.annotations.2.1.152.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\messagepackanalyzer\\2.1.152\\messagepackanalyzer.2.1.152.nupkg.sha512",
+    "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.5\\microsoft.aspnetcore.authentication.jwtbearer.6.0.5.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\6.0.0\\microsoft.aspnetcore.razor.language.6.0.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\5.0.0\\microsoft.bcl.asyncinterfaces.5.0.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.build\\17.3.2\\microsoft.build.17.3.2.nupkg.sha512",

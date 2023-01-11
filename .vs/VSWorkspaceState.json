@@ -1,8 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\diseaseAPI-DotNet6\\Controllers"
+    "\\DataAcess",
+    "\\diseaseAPI-DotNet6",
+    "\\diseaseAPI-DotNet6\\Controllers",
+    "\\DiseaseAPI.Tests",
+    "\\DiseaseAPI.Tests\\Controllers"
   ],
-  "SelectedNode": "\\diseaseAPI-DotNet6.sln",
+  "SelectedNode": "\\DiseaseAPI.Tests\\Controllers\\UserControllerTest.cs",
   "PreviewInSolutionExplorer": false
 }

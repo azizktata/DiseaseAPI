@@ -600,3 +600,4 @@ C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\bin\Debug\net6.0\DataAces
 C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\bin\Debug\net6.0\Domain.dll
 C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\bin\Debug\net6.0\DataAcess.pdb
 C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\bin\Debug\net6.0\Domain.pdb
+C:\Users\HP\source\repos\DiseaseAPI\diseaseAPI-DotNet6\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
