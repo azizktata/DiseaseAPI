@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using DataAcess;
 using Microsoft.AspNetCore.Authorization;
+using Domain.Interfaces;
+using DataAcess.UnitOfWork;
+using Azure.Core;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,73 +17,76 @@ namespace diseaseAPI_DotNet6.Controllers
     public class Doctor_infoController : ControllerBase
     {
 
-        private readonly diseaseDbContext _context;
+        private readonly IUnitOfWork _UnitOfWork;
 
-        public Doctor_infoController (diseaseDbContext context)
+        public Doctor_infoController (IUnitOfWork UnitOfWork)
         {
-            _context = context;
+            _UnitOfWork= UnitOfWork;
         }
         // GET: api/<Doctor_infoController>
         [HttpGet]
-        public async Task<ActionResult<List<Doctor_info>>> Get()
+        public  ActionResult<List<Doctor_info>> Get()
         {
-            return Ok(await _context.Doctors.ToListAsync());
+            return Ok(_UnitOfWork.Doctor_Info.GetAll());
         }
 
         
         // GET api/<Doctor_infoController>/diseaseName
         [HttpGet("{diseaseId:int}")]
-        public async Task<ActionResult<List<Doctor_info>>> GetByDiseaseName(int diseaseId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<List<Doctor_info>> GetByDiseaseId(int diseaseId)
         {
-            List<Doctor_info> Doctor_infos = await _context.Doctors.ToListAsync();
+            var Doctors = _UnitOfWork.Doctor_Info.GetAll();
             List<Doctor_info> Selected = new List<Doctor_info>();
-            foreach(Doctor_info Doctor_info in Doctor_infos)
+            if (diseaseId <= 0)
             {
-                if (Doctor_info.diseaseId == diseaseId)
-                    Selected.Add(Doctor_info);
-                    
+                return BadRequest();
             }
-            if (Selected.Count == 0)
+            foreach (Doctor_info doctor in Doctors)
             {
-                return BadRequest("Doctor_info not found");
+                if (doctor.diseaseId == diseaseId)
+                    Selected.Add(doctor);
+
             }
+
+            /*if (Selected.Count == 0)
+            {
+                return NotFound("Article not found");
+            }*/
+
             return Ok(Selected);
         }
 
         // POST api/<Doctor_infoController>
-        [Authorize]
+        
         [HttpPost]
-        public async Task<ActionResult<List<Doctor_info>>> AddDoctor_info(Doctor_info Doctor_info)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<List<Doctor_info>> AddDoctor_info(AddDoctor_InfoDTO request)
         {
-            _context.Doctors.Add(Doctor_info);
-            _context.SaveChanges();
-            var disease =  await _context.Diseases.FindAsync(Doctor_info.diseaseId);
-            if (disease == null)
-                return BadRequest("disease not found");
-            //var Doctor_infos = new List<Doctor_info>();
-            //Doctor_infos.Add(Doctor_info);
-            disease.doctors.Add(Doctor_info);
-            
-
-            //Doctor_infos.ToList<Doctor_info>().ForEach(tchr => _context.Entry(tchr).State = EntityState.Added);
-            //_context.Entry(disease.Doctor_infos).State = EntityState.Added;
-            //var entry = _context.Entry(disease);
-            
-
-            //disease.Doctor_infos.ForEach(item => _context.Entry(item).State = EntityState.Modified);
-            foreach(Doctor_info item in disease.doctors)
+            if (request.diseaseId <= 0)
             {
-              
-                _context.Entry(item).State = EntityState.Modified;
-             
-
+                return BadRequest("invalid request");
             }
-            _context.Diseases.Entry(disease).State = EntityState.Added;
-            _context.Diseases.Update(disease);
-            _context.SaveChanges();
-            
-            await _context.SaveChangesAsync();  
-            return Ok(disease);   
+
+            var Doctor_info = new Doctor_info
+            {
+                name = request.name,
+                speciality= request.speciality,
+                location= request.location,
+                diseaseId= request.diseaseId
+
+
+            };
+
+
+            _UnitOfWork.Doctor_Info.Add(Doctor_info);
+            _UnitOfWork.Save();
+
+            return Ok(Doctor_info);
         }
 
         // PUT api/<Doctor_infoController>/5
@@ -103,10 +109,15 @@ namespace diseaseAPI_DotNet6.Controllers
         // DELETE api/<Doctor_infoController>/5
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Doctor_info>>> DeleteDoctor_info(int id)
+        public ActionResult<List<Doctor_info>> DeleteDoctor_info(int id)
         {
-            _context.Doctors.Remove(_context.Doctors.Find(id));   
-            await _context.SaveChangesAsync();
+            if (id <= 0)
+                return BadRequest("invalid input");
+            var doctor_info =_UnitOfWork.Doctor_Info.GetById(id);
+            if (doctor_info == null)
+                return NotFound();
+            _UnitOfWork.Doctor_Info.Remove(doctor_info);
+            _UnitOfWork.Save();
             return Ok();
         }
     }

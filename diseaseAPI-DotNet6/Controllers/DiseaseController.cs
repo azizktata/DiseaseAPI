@@ -5,6 +5,8 @@ using DataAcess;
 
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Domain.Interfaces;
+using DataAcess.UnitOfWork;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,69 +17,82 @@ namespace diseaseAPI_DotNet6.Controllers
     public class DiseaseController : ControllerBase
     {
 
-        private readonly diseaseDbContext _context;
+        private readonly IUnitOfWork _UnitOfWork;
 
-        public DiseaseController (diseaseDbContext context)
+        public DiseaseController (IUnitOfWork UnitOfWork)
         {
-            _context = context;
+            _UnitOfWork = UnitOfWork;
         }
         // GET: api/<DiseaseController>
         
         [HttpGet()]
         public  ActionResult<List<Disease>> Get()
         {
-            return Ok( _context.Diseases.Include("articles").Include(d => d.doctors).ToList());
-           // await _db.Authors.Include(b => b.Books)
-                  //      .FirstOrDefaultAsync(i => i.Id == id);
+            return Ok( _UnitOfWork.Disease.GetDiseases());
+           
         }
 
         
         // GET api/<DiseaseController>/diseaseName
         [HttpGet("{diseaseName:alpha}")]
-        public async Task<ActionResult<List<Disease>>> GetByName(string diseaseName)
+        public ActionResult<List<Disease>> GetDiseaseByName(string diseaseName)
         {
             //List<Disease> Diseases = await _context.Diseases.ToListAsync();
-            var disease = _context.Diseases.Where(d => d.diseaseName== diseaseName).FirstOrDefault();
+            var disease = _UnitOfWork.Disease.Find(d => d.diseaseName== diseaseName).FirstOrDefault();
 
             if (disease == null)
                 return NotFound();
 
-            return Ok(_context.Diseases.Where(d => d.diseaseName == diseaseName).Include("articles").Include(d => d.doctors).ToList());
+            return Ok(_UnitOfWork.Disease.GetDiseasesByName(diseaseName));
 
-            /*foreach(Disease Disease in Diseases)
-            {
-                if (Disease.diseaseName == diseaseName)
+           
 
-                    return BadRequest(Disease);
+        }
 
+        [HttpGet("{id:int}")]
+        public ActionResult<List<Disease>> GetById(int id)
+        {
+            //List<Disease> Diseases = await _context.Diseases.ToListAsync();
+            if (id<= 0)
+                return BadRequest("Invalid input");
 
-            }
-            
-            return BadRequest("Disease not found");*/
+            var disease = _UnitOfWork.Disease.GetById(id);
+            if (disease == null)
+                return NotFound("disease not found");
+
+            return Ok(disease);
 
 
         }
 
         // POST api/<DiseaseController>
         [HttpPost]
-        public async Task<ActionResult<List<Disease>>> AddDisease(AddDiseaseDto request)
+        public ActionResult<List<Disease>> AddDisease(AddDiseaseDto request)
         {
+            if (request.diseaseName == null)
+                return BadRequest("invalid Name");
             var disease = new Disease
             {
                 diseaseName = request.diseaseName,
             };
-            _context.Diseases.Add(disease);
-            await _context.SaveChangesAsync();  
+            _UnitOfWork.Disease.Add(disease);
+            _UnitOfWork.Save();  
             return Ok(disease);   
         }
 
 
         // DELETE api/<DiseaseController>/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<Disease>>> DeleteDisease(int id)
         {
-            _context.Diseases.Remove(_context.Diseases.Find(id));   
-            await _context.SaveChangesAsync();
+            if (id <= 0)
+                return BadRequest("invalid input");
+            var disease = _UnitOfWork.Disease.GetById(id);
+            if (disease == null)
+                return NotFound();
+            _UnitOfWork.Disease.Remove(disease);
+            _UnitOfWork.Save();
             return Ok();
         }
     }

@@ -60,7 +60,7 @@ namespace diseaseAPI_DotNet6.Controllers
         }
 
         // POST api/<ArticleController>
-        [Authorize]
+        
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

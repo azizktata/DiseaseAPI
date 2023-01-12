@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IDiseaseRepository : IGenericRepository <Disease> { }
+    public interface IDiseaseRepository : IGenericRepository <Disease> 
+    {
+        List<Disease> GetDiseases();
+
+        List<Disease> GetDiseasesByName(string name);
+
+    }
     
     
 }

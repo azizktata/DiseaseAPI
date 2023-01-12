@@ -7,6 +7,6 @@
     "\\DiseaseAPI.Tests",
     "\\DiseaseAPI.Tests\\Controllers"
   ],
-  "SelectedNode": "\\DiseaseAPI.Tests\\Controllers\\UserControllerTest.cs",
+  "SelectedNode": "\\diseaseAPI-DotNet6\\Controllers\\ArticleController.cs",
   "PreviewInSolutionExplorer": false
 }

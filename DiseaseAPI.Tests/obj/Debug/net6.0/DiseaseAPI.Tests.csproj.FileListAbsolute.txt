@@ -375,3 +375,4 @@ C:\Users\HP\source\repos\DiseaseAPI\DiseaseAPI.Tests\obj\Debug\net6.0\refint\Dis
 C:\Users\HP\source\repos\DiseaseAPI\DiseaseAPI.Tests\obj\Debug\net6.0\DiseaseAPI.Tests.pdb
 C:\Users\HP\source\repos\DiseaseAPI\DiseaseAPI.Tests\obj\Debug\net6.0\DiseaseAPI.Tests.genruntimeconfig.cache
 C:\Users\HP\source\repos\DiseaseAPI\DiseaseAPI.Tests\obj\Debug\net6.0\ref\DiseaseAPI.Tests.dll
+C:\Users\HP\source\repos\DiseaseAPI\DiseaseAPI.Tests\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
