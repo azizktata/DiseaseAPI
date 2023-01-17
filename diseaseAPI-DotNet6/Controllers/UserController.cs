@@ -46,10 +46,10 @@ namespace diseaseAPI_DotNet6.Controllers
             return Ok(User);
         }
 
-        [HttpGet("login/{email}/{password}")]
+        [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<List<User>> GetByEmail(string email, string password)
+        public ActionResult<List<User>> login(string email, string password)
         {
             var Users = unitOfWork.User.GetAll();
             int i = 0;
